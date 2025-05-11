@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>神魔殿</title>
+    <script src="https://cdn.jsdelivr.net/npm/suncalc@1.8.0/suncalc.min.js"></script>
+    <style>
+        :root {
+            --bg-day: #ffffff;
+            --text-day: #000000;
+            --bg-night: #1a1a1a;
+            --text-night: #ffffff;
+        }
+
+        body {
+            margin: 0;
+            height: 100vh;
+            transition: background-color 0.5s, color 0.5s;
+            position: relative;
+        }
+
+        .main-title {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 5rem;
+            margin: 0;
+            font-family: 'Microsoft YaHei', sans-serif;
+            letter-spacing: 0.2em;
+        }
+
+        .sub-title {
+            position: absolute;
+            top: 120px;
+            left: 20%;
+            font-size: 2.5rem;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            opacity: 0.8;
+        }
+
+        body[data-theme="day"] {
+            background-color: var(--bg-day);
+            color: var(--text-day);
+        }
+
+        body[data-theme="night"] {
+            background-color: var(--bg-night);
+            color: var(--text-night);
+        }
+    </style>
+</head>
+<body>
+    <h1 class="main-title">神魔殿</h1>
+    <h1 class="sub-title">Ai</h1>
+
+    <script>
+        (function() {
+            const shanghai = { lat: 31.2304, lng: 121.4737 };
+
+            function getSunTimes() {
+                const now = new Date();
+                return SunCalc.getTimes(now, shanghai.lat, shanghai.lng);
+            }
+
+            function getCurrentTheme() {
+                const now = new Date();
+                const { sunrise, sunset } = getSunTimes();
+                return now > sunrise && now < sunset ? 'day' : 'night';
+            }
+
+            function applyTheme() {
+                document.body.setAttribute('data-theme', getCurrentTheme());
+            }
+
+            function init() {
+                applyTheme();
+                const midnight = new Date();
+                midnight.setHours(24, 0, 0, 0);
+                setTimeout(init, midnight - new Date());
+                setInterval(applyTheme, 60000);
+            }
+
+            init();
+        })();
+    </script>
+</body>
+</html>
